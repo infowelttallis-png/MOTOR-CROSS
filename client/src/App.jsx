@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import styled from "styled-components";
 import { GlobalStyle } from "./styles/globalStyles";
 import Header from "./components/layout/header";
-import Footer from "./components/layout/Footer";
+import Footer from "./components/layout/footer";
 import EventDetails from "./components/pages/eventsDetails"; // Create this file next
 
 // Lazy load all sections
