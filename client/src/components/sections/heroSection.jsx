@@ -5,7 +5,6 @@ import styled, { keyframes } from "styled-components";
 import { Container } from "react-bootstrap";
 import { theme } from "../../styles/theme";
 
-// Define all keyframes at the top
 const pulse = keyframes`
   0% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.4; transform: scale(1.3); }
@@ -31,19 +30,6 @@ const dustExplosion = keyframes`
   }
 `;
 
-const engineRev = keyframes`
-  0% { transform: scale(1); }
-  25% { transform: scale(1.02); }
-  50% { transform: scale(0.98); }
-  75% { transform: scale(1.01); }
-  100% { transform: scale(1); }
-`;
-
-const throttleBlip = keyframes`
-  0%, 100% { opacity: 0.3; filter: blur(2px); }
-  50% { opacity: 1; filter: blur(4px); }
-`;
-
 const HeroWrapper = styled.section`
   position: relative;
   height: 100vh;
@@ -52,7 +38,6 @@ const HeroWrapper = styled.section`
   align-items: center;
   background: #020617 url("/hero.jpg") center/cover no-repeat;
   overflow: hidden;
-  animation: ${engineRev} 3s infinite ease-in-out;
 
   &::before {
     content: "";
@@ -65,20 +50,6 @@ const HeroWrapper = styled.section`
       transparent 100%
     );
     z-index: 1;
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      circle at 50% 50%,
-      transparent 0%,
-      rgba(255, 100, 0, 0.1) 100%
-    );
-    z-index: 1;
-    pointer-events: none;
-    animation: ${throttleBlip} 2s infinite;
   }
 `;
 
@@ -98,7 +69,6 @@ const DustParticle = styled.div`
   top: ${(props) => props.top || "50%"};
   --x: ${(props) => props.x || "100px"};
   --y: ${(props) => props.y || "-50px"};
-  box-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
 `;
 
 const Content = styled(Container)`
@@ -160,8 +130,6 @@ const ActionButton = styled.button`
   align-items: center;
   gap: 8px;
   font-size: 0.85rem;
-  position: relative;
-  overflow: hidden;
 
   .dot {
     width: 8px;
@@ -171,12 +139,6 @@ const ActionButton = styled.button`
     animation: ${pulse} 1.5s infinite;
     box-shadow: 0 0 8px #ff0000;
     display: ${(props) => (props.$live ? "block" : "none")};
-  }
-
-  .flame {
-    display: ${(props) => (props.$primary ? "inline-block" : "none")};
-    margin-left: 5px;
-    font-size: 1rem;
   }
 
   &:hover {
@@ -189,13 +151,42 @@ const ButtonRow = styled.div`
   display: flex;
   gap: 12px;
   flex-wrap: nowrap;
+  margin-bottom: 40px;
 
   @media (max-width: 480px) {
     gap: 8px;
   }
 `;
 
-// Generate random dust particles
+const StatsRow = styled.div`
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  border-top: 1px solid rgba(255, 107, 0, 0.3);
+  padding-top: 25px;
+`;
+
+const StatItem = styled.div`
+  text-align: left;
+
+  .number {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: ${theme.colors.primary};
+    line-height: 1;
+    margin-bottom: 5px;
+  }
+
+  .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 1px;
+  }
+`;
+
+// Generate dust particles
 const generateDustParticles = (count) => {
   const particles = [];
   const colors = [
@@ -204,7 +195,6 @@ const generateDustParticles = (count) => {
     "#CD853F",
     "#8B4513",
     "#D2691E",
-    "#FF8C00",
   ];
 
   for (let i = 0; i < count; i++) {
@@ -212,7 +202,7 @@ const generateDustParticles = (count) => {
       id: i,
       size: `${Math.random() * 8 + 2}px`,
       color: colors[Math.floor(Math.random() * colors.length)],
-      duration: `${Math.random() * 3 + 1.5}s`,
+      duration: `${Math.random() * 3 + 2}s`,
       delay: `${Math.random() * 2}s`,
       left: `${Math.random() * 100}%`,
       top: `${Math.random() * 100}%`,
@@ -223,22 +213,21 @@ const generateDustParticles = (count) => {
   return particles;
 };
 
-// Memoized component with navigation
 const HeroSection = memo(() => {
   const navigate = useNavigate();
-  const particles = generateDustParticles(25);
+  const particles = generateDustParticles(20);
 
   const handleResultsClick = () => {
     navigate("/results");
   };
 
-  const handleTicketClick = () => {
+  const handleTicketsClick = () => {
     navigate("/tickets");
   };
 
   return (
     <HeroWrapper id="home">
-      {/* Dust Particle Explosion Effect - Keep the moving background animations */}
+      {/* Soil splash particles only */}
       {particles.map((particle) => (
         <DustParticle
           key={particle.id}
@@ -254,7 +243,7 @@ const HeroSection = memo(() => {
       ))}
 
       <Content>
-        <Badge>Jamhuri Showgrounds</Badge>
+        <Badge>Jamhuri Showgrounds • Nairobi</Badge>
 
         <Title>
           EXPERIENCE <span>THE THRILL</span>
@@ -266,13 +255,29 @@ const HeroSection = memo(() => {
         </Description>
 
         <ButtonRow>
-          <ActionButton $primary onClick={handleResultsClick} $live>
-            <div className="dot" />
-            Live Results
-            <span className="flame">🔥</span>
+          <ActionButton $primary onClick={handleTicketsClick}>
+            GET TICKETS
           </ActionButton>
-          <ActionButton onClick={handleTicketClick}>8AM - 4PM</ActionButton>
+          <ActionButton onClick={handleResultsClick} $live>
+            <div className="dot" />
+            LIVE RESULTS
+          </ActionButton>
         </ButtonRow>
+
+        <StatsRow>
+          <StatItem>
+            <div className="number">50+</div>
+            <div className="label">RIDERS</div>
+          </StatItem>
+          <StatItem>
+            <div className="number">8</div>
+            <div className="label">RACES</div>
+          </StatItem>
+          <StatItem>
+            <div className="number">10K+</div>
+            <div className="label">FANS</div>
+          </StatItem>
+        </StatsRow>
       </Content>
     </HeroWrapper>
   );
