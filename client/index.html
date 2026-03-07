@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- Preconnect for critical third-party resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+
+    <!-- Favicon (inline minimal) -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏁</text></svg>"
+    />
+
+    <!-- Critical CSS - Bootstrap core (inline minimal or deferred) -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <noscript>
+      <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        crossorigin="anonymous"
+      />
+    </noscript>
+
+    <!-- Preload critical fonts -->
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap"
+      as="style"
+      onload="
+        this.onload = null;
+        this.rel = 'stylesheet';
+      "
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- PRIMARY META TAGS -->
+    <title>MX KENYA | Kenya's Premier Motocross Championship</title>
+    <meta
+      name="description"
+      content="Experience the dust, the speed, and the glory at Jamhuri Showgrounds. Kenya's premier motocross championship featuring the best riders in East Africa."
+    />
+    <meta
+      name="keywords"
+      content="motocross, kenya, racing, mx kenya, jamhuri, dirt bike, championship, nairobi, sports"
+    />
+    <meta name="author" content="MX Kenya" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- OPEN GRAPH / FACEBOOK META TAGS -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mxkenya.co.ke/" />
+    <meta property="og:site_name" content="MX Kenya" />
+    <meta
+      property="og:title"
+      content="MX KENYA | Kenya's Premier Motocross Championship"
+    />
+    <meta
+      property="og:description"
+      content="🏁 Experience the thrill of professional motocross at Jamhuri Showgrounds. Watch Kenya's best riders compete for glory in the 2026 season. Get your tickets now!"
+    />
+    <meta property="og:image" content="https://mxkenya.co.ke/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="MX Kenya motocross action shot" />
+    <meta property="og:locale" content="en_KE" />
+
+    <!-- TWITTER META TAGS -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@mxkenya" />
+    <meta name="twitter:creator" content="@mxkenya" />
+    <meta
+      name="twitter:title"
+      content="MX KENYA | Premier Motocross Championship"
+    />
+    <meta
+      name="twitter:description"
+      content="🏁 Experience the dust, the speed, and the glory at Jamhuri Showgrounds. Kenya's premier motocross championship."
+    />
+    <meta
+      name="twitter:image"
+      content="https://mxkenya.co.ke/twitter-image.jpg"
+    />
+    <meta name="twitter:image:alt" content="MX Kenya motocross action" />
+
+    <!-- WHATSAPP SPECIFIC (uses Open Graph) -->
+    <meta
+      property="og:image:secure_url"
+      content="https://mxkenya.co.ke/og-image.jpg"
+    />
+
+    <!-- APPLE TOUCH ICON -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- ADDITIONAL SOCIAL MEDIA TAGS -->
+    <meta name="theme-color" content="#ff6600" />
+    <meta name="msapplication-TileColor" content="#ff6600" />
+
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/hero.jpg" as="image" />
+    <link rel="modulepreload" href="/src/main.jsx" />
+
+    <!-- Critical inline CSS for loader only -->
+    <style>
+      /* Loader - minimal critical CSS */
+      #loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+        transition:
+          opacity 0.5s ease-out,
+          visibility 0.5s;
+      }
+
+      .loader-text {
+        font-family: "Orbitron", sans-serif;
+        color: #ffffff;
+        font-size: clamp(2rem, 10vw, 5rem);
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: -2px;
+        font-style: italic;
+        margin: 0;
+        animation: glitch 1.2s infinite;
+      }
+
+      .loader-text span {
+        color: #ff6600;
+        text-shadow: 0 0 20px rgba(255, 102, 0, 0.4);
+      }
+
+      .loader-bar {
+        width: 200px;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.1);
+        margin-top: 10px;
+        position: relative;
+        overflow: hidden;
+        transform: skewX(-20deg);
+      }
+
+      .loader-bar::after {
+        content: "";
+        position: absolute;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: #ff6600;
+        animation: race 1s infinite linear;
+      }
+
+      @keyframes race {
+        0% {
+          left: -100%;
+        }
+        100% {
+          left: 100%;
+        }
+      }
+
+      @keyframes glitch {
+        0% {
+          transform: skewX(-15deg);
+        }
+        50% {
+          transform: skewX(-20deg);
+          opacity: 0.8;
+        }
+        100% {
+          transform: skewX(-15deg);
+        }
+      }
+
+      body.loaded #loader {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      /* Hide loader if JS fails */
+      .no-js #loader {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loader">
+      <h1 class="loader-text">MOTO<span>CROSS</span></h1>
+      <div class="loader-bar"></div>
+    </div>
+
+    <div id="root"></div>
+
+    <!-- Defer non-critical JavaScript -->
+    <script>
+      // Mark if JS is enabled
+      document.documentElement.className =
+        document.documentElement.className.replace("no-js", "js");
+
+      // Handle loader dismissal
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          document.body.classList.add("loaded");
+        }, 500);
+      });
+
+      // Prefetch results page for faster navigation
+      setTimeout(() => {
+        const prefetch = document.createElement("link");
+        prefetch.rel = "prefetch";
+        prefetch.href = "/src/components/sections/resultsSection.js";
+        document.head.appendChild(prefetch);
+      }, 3000);
+    </script>
+
+    <!-- Defer Bootstrap JS with async -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Main app script - use module with defer -->
+    <script type="module" src="/src/main.jsx" defer></script>
+
+    <!-- Add noscript fallback -->
+    <noscript>
+      <div
+        style="
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          padding: 20px;
+          background: #ff6600;
+          color: #000;
+          text-align: center;
+          z-index: 999999;
+        "
+      >
+        Please enable JavaScript to experience the full MX Kenya website.
+      </div>
+    </noscript>
+  </body>
+</html>
