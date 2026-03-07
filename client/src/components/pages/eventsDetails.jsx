@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Container, Row, Col } from "react-bootstrap";
 import { events } from "../dummydata";
 import { theme } from "../../styles/theme";
-import MpesaModal from "../modals/MpesaModal"; // Add this import
+import MpesaModal from "../modals/mpesaModal"; // Add this import
 
 const DetailWrapper = styled.div`
   background: #000;
@@ -243,3 +243,4 @@ const EventDetails = () => {
 };
 
 export default EventDetails;
+
