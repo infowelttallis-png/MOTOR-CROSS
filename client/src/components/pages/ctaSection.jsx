@@ -66,7 +66,7 @@ const TestimonialsTrack = styled.div`
 `;
 
 const TestimonialCard = styled.div`
-  background: #0a0a0a;
+  
   padding: 30px;
   width: 350px;
   border-left: 4px solid ${theme.colors.primary};
@@ -253,3 +253,4 @@ const CTASection = () => {
 };
 
 export default CTASection;
+
