@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Container, Row, Col } from "react-bootstrap";
 import { theme } from "../../styles/theme";
 import { events } from "../../components/dummydata";
-import MpesaModal from "../modals/MpesaModal";
+import MpesaModal from "../modals/mpesaModal";
 
 const SectionWrapper = styled.section`
   padding: 100px 0;
@@ -287,3 +287,4 @@ const EventsSection = () => {
 };
 
 export default EventsSection;
+
