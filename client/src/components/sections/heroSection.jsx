@@ -36,9 +36,28 @@ const HeroWrapper = styled.section`
   min-height: 750px;
   display: flex;
   align-items: center;
-  background: #020617 url("/hero.jpg") center/cover no-repeat;
+  background: #020617;
   overflow: hidden;
 
+  /* Background image - only this part changed */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("/hero.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+
+    /* Mobile adjustments - just enough to see the image */
+    @media (max-width: 768px) {
+      background-position: 65% center;
+      opacity: 0.9; /* Slightly reduce opacity to blend better */
+    }
+  }
+
+  /* Gradient overlay - exactly as before */
   &::before {
     content: "";
     position: absolute;
@@ -76,6 +95,12 @@ const Content = styled(Container)`
   z-index: 3;
   max-width: 800px;
   padding-top: 80px;
+
+  /* Keep your exact mobile styles */
+  @media (max-width: 768px) {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 `;
 
 const Badge = styled.div`
@@ -114,6 +139,11 @@ const Description = styled.p`
   padding-left: 20px;
   margin-bottom: 35px;
   line-height: 1.5;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    max-width: 100%;
+  }
 `;
 
 const ActionButton = styled.button`
@@ -155,6 +185,7 @@ const ButtonRow = styled.div`
 
   @media (max-width: 480px) {
     gap: 8px;
+    width: 100%;
   }
 `;
 
@@ -165,6 +196,11 @@ const StatsRow = styled.div`
   margin-top: 20px;
   border-top: 1px solid rgba(255, 107, 0, 0.3);
   padding-top: 25px;
+
+  @media (max-width: 768px) {
+    gap: 25px;
+    justify-content: center;
+  }
 `;
 
 const StatItem = styled.div`
@@ -184,18 +220,20 @@ const StatItem = styled.div`
     color: rgba(255, 255, 255, 0.7);
     letter-spacing: 1px;
   }
+
+  @media (max-width: 768px) {
+    text-align: center;
+
+    .number {
+      font-size: 1.5rem;
+    }
+  }
 `;
 
 // Generate dust particles
 const generateDustParticles = (count) => {
   const particles = [];
-  const colors = [
-    "#8B7355",
-    "#A0522D",
-    "#CD853F",
-    "#8B4513",
-    "#D2691E",
-  ];
+  const colors = ["#8B7355", "#A0522D", "#CD853F", "#8B4513", "#D2691E"];
 
   for (let i = 0; i < count; i++) {
     particles.push({
