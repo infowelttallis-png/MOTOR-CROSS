@@ -45,7 +45,7 @@ const Title = styled.h2`
 `;
 
 const CardWrapper = styled.div`
-  background: #0a0a0a;
+  
   border: 1px solid rgba(255, 255, 255, 0.05);
   transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   height: 100%;
@@ -287,3 +287,4 @@ const EventsSection = () => {
 };
 
 export default EventsSection;
+
