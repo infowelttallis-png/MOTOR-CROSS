@@ -1,332 +1,200 @@
-import React, { useState, memo, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, memo } from "react";
 import styled, { keyframes } from "styled-components";
-import SponsorSection from "./sponsorSection"; // Imported as requested
+import { useNavigate } from "react-router-dom";
+import SponsorSection from "./sponsorSection";
 
-// --- ANIMATIONS (optimized) ---
 const fadeIn = keyframes`
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
 `;
 
-const blink = keyframes`
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-`;
-
-// --- STYLED COMPONENTS ---
 const ResultsWrapper = styled.section`
   color: #fff;
-  font-family: "Inter", sans-serif;
-  width: 100%;
-  padding: 20px 0;
-  animation: ${fadeIn} 0.2s ease; /* Faster fade in */
+  padding: 40px 0;
 `;
 
-const ResultsContainer = styled.div`
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 15px;
-`;
-
-const BackButton = styled.button`
-  background: #ff4d00;
-  color: #000000;
-  border: 2px solid #ff4d00;
-  padding: 10px 20px;
+const BackBtn = styled.button`
+  background: ${props => props.theme?.colors?.primary || "#FF3E00"};
+  color: #000;
+  border: none;
+  padding: 8px 20px;
   font-weight: 900;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  cursor: pointer;
   clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s ease;
+  margin-bottom: 30px;
+  cursor: pointer;
+  transition: 0.3s;
 
   &:hover {
-    background: #ff4d00;
-    color: #000;
     transform: translateX(-5px);
-  }
-
-  .arrow {
-    font-size: 1.2rem;
-    line-height: 1;
+    filter: brightness(1.2);
   }
 `;
 
-const HeaderSection = styled.div`
+const Header = styled.div`
+  margin-bottom: 30px;
+  border-left: 4px solid ${props => props.theme?.colors?.primary || "#FF3E00"};
+  padding-left: 15px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-  border-left: 4px solid #ff4d00;
-  padding-left: 15px;
-`;
+  align-items: flex-end;
 
-const Title = styled.h1`
-  font-size: 1.1rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  margin: 0;
-  span {
-    color: #ff4d00;
-    font-size: 0.65rem;
-    display: block;
-    letter-spacing: 2px;
-    margin-bottom: 2px;
-  }
-`;
-
-const ClassGrid = styled.div`
-  display: flex;
-  gap: 10px;
-  margin-bottom: 25px;
-  flex-wrap: wrap;
-`;
-
-const ClassBtn = styled.button`
-  background: ${(props) => (props.$active ? "#ff4d00" : "#0a0a0a")};
-  color: ${(props) => (props.$active ? "#fff" : "#666")};
-  border: 1px solid ${(props) => (props.$active ? "#333" : "#1a1a1a")};
-  border-bottom: 3px solid
-    ${(props) => (props.$active ? "#ff4d00" : "transparent")};
-  padding: 10px 20px;
-  cursor: pointer;
-  font-weight: 900;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: #222;
-    color: #fff;
+  h1 {
+    font-size: 1.2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin: 0;
+    line-height: 1;
+    span {
+      color: ${props => props.theme?.colors?.primary || "#FF3E00"};
+      font-size: 0.6rem;
+      display: block;
+      letter-spacing: 3px;
+      margin-bottom: 5px;
+    }
   }
 `;
 
 const TableFrame = styled.div`
   width: 100%;
   overflow-x: auto;
-  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.2);
 `;
 
-const GridTemplate = styled.div`
+const Grid = styled.div`
   display: grid;
-  grid-template-columns: 80px 120px 80px 200px 10px;
-  column-gap: 15px;
-  min-width: 650px;
+  grid-template-columns: 80px 1fr 120px 160px 60px;
   align-items: center;
-  padding: 10px 20px;
+  padding: 14px 25px;
+  gap: 20px;
+  min-width: 750px;
 `;
 
-const TableHeader = styled(GridTemplate)`
-  background: #0a0a0a;
+const HeaderRow = styled(Grid)`
+  background: rgba(255, 255, 255, 0.03);
   font-size: 0.65rem;
   font-weight: 900;
-  color: #ffffff;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
+  color: ${props => props.theme?.colors?.primary || "#FF3E00"};
 `;
 
-const TableRow = styled(GridTemplate)`
-  border-bottom: 1px solid #111;
-  animation: ${fadeIn} 0.2s ease forwards;
-  animation-delay: ${(props) => props.$index * 0.02}s;
-  opacity: 0;
-  background: ${(props) =>
-    props.$offTrack ? "rgba(255, 0, 0, 0.02)" : "transparent"};
-
+const Row = styled(Grid)`
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  animation: ${fadeIn} 0.3s ease forwards;
+  
   &:hover {
-    background: rgba(255, 77, 0, 0.05);
+    background: rgba(255, 255, 255, 0.03);
   }
 `;
 
-const Position = styled.div`
-  font-family: "Orbitron", sans-serif;
-  font-weight: 950;
-  font-size: 1rem;
-  color: ${(props) => (props.$index < 3 ? "#ff4d00" : "#444")};
-  font-style: italic;
-`;
-
-const RiderName = styled.div`
-  .name {
-    font-weight: 800;
-    font-size: 0.85rem;
-    color: ${(props) => (props.$offTrack ? "#666" : "#fff")};
-  }
-  .team {
-    font-size: 0.55rem;
-    color: #444;
-    text-transform: uppercase;
-  }
-`;
-
-const StatusTag = styled.div`
-  font-size: 0.55rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: ${(props) => (props.$active ? "#00ff66" : "#ff4444")};
-  .dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: currentColor;
-    animation: ${blink} 1.5s infinite;
-  }
-`;
-
-const ProgressBarContainer = styled.div`
-  width: 100%;
-  max-width: 160px;
-  height: 6px;
-  background: #111;
-  border-radius: 10px;
-  position: relative;
-  overflow: hidden;
-
-  ${(props) =>
-    props.$offTrack &&
-    `
-    background: transparent;
-    border: 1px dashed #333;
-  `}
-`;
-
-const Fill = styled.div`
-  height: 100%;
-  width: ${(props) => props.$percent}%;
-  transition: width 0.6s cubic-bezier(0.17, 0.67, 0.83, 0.67);
-
-  background: ${(props) => {
-    if (props.$offTrack) return "#222222";
-    if (props.$percent >= 90) return "#fff";
-    if (props.$percent >= 60) return "#fbbf24";
-    return "#10b981";
-  }};
-
-  box-shadow: ${(props) =>
-    props.$percent >= 90 && !props.$offTrack ? "0 0 8px #fff" : "none"};
-`;
-
-const Points = styled.div`
-  text-align: right;
+const Pts = styled.div`
   font-family: "JetBrains Mono", monospace;
   font-weight: 900;
-  color: ${(props) => (props.$offTrack ? "#444" : "#fff")};
-  font-size: 0.8rem;
-  span {
-    font-size: 0.55rem;
-    color: #444;
-    margin-left: 2px;
-  }
+  font-size: 1.1rem;
+  color: ${props => props.$off ? "#444" : "#fff"};
+`;
+
+const RiderBox = styled.div`
+  .n { font-weight: 800; font-size: 0.95rem; text-transform: uppercase; color: ${props => props.$off ? "#555" : "#fff"}; }
+  .t { font-size: 0.6rem; color: rgba(255,255,255,0.3); text-transform: uppercase; font-weight: 700; }
+`;
+
+const Status = styled.div`
+  font-size: 0.6rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: ${props => props.$active ? "#00ff66" : "#ff4444"};
+`;
+
+const BarBase = styled.div`
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  overflow: hidden;
+`;
+
+const BarFill = styled.div`
+  height: 100%;
+  width: ${props => props.$val}%;
+  transition: width 1s ease;
+
+  background: ${props => {
+    if (props.$off) return "#222";
+    if (props.$val >= 90) return "#ffffff"; // Elite - White
+    if (props.$val >= 75) return "#fbbf24"; // Top Tier - Yellow
+    return "#10b981"; // Active - Green
+  }};
+  
+  box-shadow: ${props => (props.$val >= 90 && !props.$off) ? "0 0 10px rgba(255,255,255,0.5)" : "none"};
+`;
+
+const Pos = styled.div`
+  text-align: right;
+  font-weight: 950;
+  font-style: italic;
+  font-size: 1rem;
+  color: ${props => {
+    if (props.$idx === 0) return "#FFD700"; // Gold
+    if (props.$idx === 1) return "#C0C0C0"; // Silver
+    if (props.$idx === 2) return "#CD7F32"; // Bronze
+    return "rgba(255,255,255,0.1)";
+  }};
 `;
 
 const ResultsSection = () => {
-  const [activeClass, setActiveClass] = useState("MX1");
-  const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
-  const isFullPage = location.pathname === "/results";
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
-
   const results = [
-    { name: "E. KIMANI", team: "RED BULL KTM", status: "Active", pts: 100 },
-    { name: "L. KWAMBAI", team: "ROCKSTAR HUSKY", status: "Active", pts: 88 },
-    { name: "Z. MUTUA", team: "MONSTER YAMAHA", status: "Active", pts: 82 },
-    { name: "M. OTIENO", team: "TLD GASGAS", status: "Off-Track", pts: 71 },
-    { name: "J. SHAH", team: "MOTOSPORT KE", status: "Active", pts: 65 },
-    { name: "D. KIPROP", team: "HONDA RACING", status: "Active", pts: 58 },
-    { name: "S. MAINA", team: "PRIVATEER", status: "Active", pts: 42 },
-    { name: "P. LEWA", team: "KTM KENYA", status: "Off-Track", pts: 35 },
-    { name: "R. LANGAT", team: "HUSQVARNA KE", status: "Active", pts: 28 },
-    { name: "B. WAWERU", team: "SHERCO KE", status: "Active", pts: 12 },
+    { n: "E. KIMANI", t: "RED BULL KTM", s: "Active", p: 100 },
+    { n: "L. KWAMBAI", t: "ROCKSTAR HUSKY", s: "Active", p: 88 },
+    { n: "Z. MUTUA", t: "MONSTER YAMAHA", s: "Active", p: 82 },
+    { n: "M. OTIENO", t: "TLD GASGAS", s: "Off-Track", p: 71 },
+    { n: "J. SHAH", t: "MOTOSPORT KE", s: "Active", p: 65 },
+    { n: "D. KIPROP", t: "HONDA RACING", s: "Active", p: 58 },
   ];
-
-  if (!isVisible) return null;
 
   return (
     <ResultsWrapper>
-      <ResultsContainer>
-        {isFullPage && (
-          <BackButton onClick={() => navigate("/")}>
-            <span className="arrow">←</span> BACK TO HOME
-          </BackButton>
-        )}
+      <div className="container">
+        <BackBtn onClick={() => navigate("/")}>← Back to Home</BackBtn>
 
-        <HeaderSection>
-          <Title>
-            <span>LIVE // RACE 1</span>
-            Race Leaderboard
-          </Title>
-          <div
-            style={{
-              textAlign: "right",
-              fontSize: "0.65rem",
-              color: "#444",
-              fontWeight: "900",
-            }}
-          >
-            CIRCUIT MX1 • 2026
-          </div>
-        </HeaderSection>
-
-        <ClassGrid>
-          {["MX50", "MX65", "MX85", "MX2", "MX1"].map((c) => (
-            <ClassBtn
-              key={c}
-              $active={activeClass === c}
-              onClick={() => setActiveClass(c)}
-            >
-              {c}
-            </ClassBtn>
-          ))}
-        </ClassGrid>
+        <Header>
+          <h1><span>2026 SERIES</span>Live Standings</h1>
+          <div style={{fontSize: '0.6rem', color: 'rgba(255,255,255,0.2)', fontWeight: 900}}>JAMHURI PARK CIRCUIT</div>
+        </Header>
 
         <TableFrame>
-          <TableHeader>
-            <div>Pos</div>
+          <HeaderRow>
+            <div>Points</div>
             <div>Rider / Team</div>
             <div>Status</div>
             <div>Efficiency</div>
-            <div style={{ textAlign: "right" }}>Pts</div>
-          </TableHeader>
+            <div style={{textAlign: 'right'}}>Pos</div>
+          </HeaderRow>
 
           {results.map((r, i) => (
-            <TableRow key={i} $index={i} $offTrack={r.status === "Off-Track"}>
-              <Position $index={i}>P{i + 1}</Position>
-
-              <RiderName $offTrack={r.status === "Off-Track"}>
-                <div className="name">{r.name}</div>
-                <div className="team">{r.team}</div>
-              </RiderName>
-
-              <StatusTag $active={r.status === "Active"}>
-                <div className="dot" />
-                {r.status === "Active" ? "Active" : "Off-Track"}
-              </StatusTag>
-
-              <ProgressBarContainer $offTrack={r.status === "Off-Track"}>
-                <Fill $percent={r.pts} $offTrack={r.status === "Off-Track"} />
-              </ProgressBarContainer>
-
-              <Points $offTrack={r.status === "Off-Track"}>{r.pts}</Points>
-            </TableRow>
+            <Row key={i} $off={r.s === "Off-Track"}>
+              <Pts $off={r.s === "Off-Track"}>{r.p}</Pts>
+              <RiderBox $off={r.s === "Off-Track"}>
+                <div className="n">{r.n}</div>
+                <div className="t">{r.t}</div>
+              </RiderBox>
+              <Status $active={r.s === "Active"}>{r.s}</Status>
+              <BarBase>
+                <BarFill $val={r.p} $off={r.s === "Off-Track"} />
+              </BarBase>
+              <Pos $idx={i}>P{i + 1}</Pos>
+            </Row>
           ))}
         </TableFrame>
 
-        {/* SPONSOR SECTION INTEGRATED HERE */}
-        <SponsorSection />
-      </ResultsContainer>
+        <div style={{ marginTop: "60px" }}>
+          <SponsorSection />
+        </div>
+      </div>
     </ResultsWrapper>
   );
 };
