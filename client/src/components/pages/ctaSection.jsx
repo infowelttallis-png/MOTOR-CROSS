@@ -1,7 +1,6 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
-import { Container, Row, Col } from "react-bootstrap";
-import { theme } from "../../styles/theme";
+import { Container } from "react-bootstrap";
 import SponsorSection from "../sections/sponsorSection";
 
 const scroll = keyframes`
@@ -13,143 +12,126 @@ const CTAWrapper = styled.section`
   padding: 80px 0 0;
   position: relative;
   overflow: hidden;
+  /* Completely transparent - parent handles everything */
 `;
 
-const StyledContainer = styled(Container)`
-  max-width: 1200px !important;
-  position: relative;
-  z-index: 2;
-`;
-
-const TitleBox = styled.div`
-  text-align: center;
+const ContentHeader = styled.div`
+  text-align: left; /* Aligned to start */
   margin-bottom: 50px;
+  border-left: 4px solid ${(props) => props.theme?.colors?.primary || "#FF3E00"};
+  padding-left: 25px;
 
   h2 {
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-family: ${(props) => props.theme?.fonts?.display || "sans-serif"};
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
     font-weight: 950;
     text-transform: uppercase;
     color: #fff;
-    line-height: 1.1;
-    margin-bottom: 15px;
+    line-height: 0.85;
+    margin: 0;
 
     span {
-      color: ${theme.colors.primary};
-      display: block;
+      color: ${(props) => props.theme?.colors?.primary || "#FF3E00"};
       font-style: italic;
     }
   }
 
   p {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: rgba(255, 255, 255, 0.4);
     text-transform: uppercase;
-    letter-spacing: 4px;
+    letter-spacing: 6px;
+    margin-top: 10px;
+    font-weight: 900;
   }
-`;
-
-const TestimonialsWrapper = styled.div`
-  margin-bottom: 60px;
-  overflow: hidden;
-  padding: 20px 0;
 `;
 
 const TestimonialsTrack = styled.div`
   display: flex;
-  gap: 25px;
-  animation: ${scroll} 45s linear infinite;
+  gap: 60px; /* Increased gap for a cleaner, non-boxy look */
+  animation: ${scroll} 50s linear infinite;
   width: fit-content;
+  padding: 40px 0;
 
   &:hover {
     animation-play-state: paused;
   }
 `;
 
-const TestimonialCard = styled.div`
-  
-  padding: 30px;
-  width: 350px;
-  border-left: 4px solid ${theme.colors.primary};
+const TestimonialItem = styled.div`
+  background: none; /* Removed all card backgrounds */
+  width: 380px;
   flex-shrink: 0;
-  transition: 0.3s;
-
-  &:hover {
-    background: #111;
-    transform: translateY(-5px);
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 
   .quote {
     color: #fff;
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 20px;
-    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin-bottom: 25px;
+    font-weight: 600;
+    position: relative;
+
+    /* Subtle quote mark for "Advanced" look */
+    &::before {
+      content: '"';
+      position: absolute;
+      top: -20px;
+      left: -10px;
+      font-size: 3rem;
+      color: ${(props) => props.theme?.colors?.primary || "#FF3E00"};
+      opacity: 0.3;
+      font-family: serif;
+    }
   }
 
   .client-info {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
   }
 
-  .avatar {
-    width: 45px;
-    height: 45px;
-    background: ${theme.colors.primary};
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    color: #000;
-    font-size: 1.1rem;
+  .avatar-label {
+    font-size: 0.75rem;
+    font-weight: 950;
+    color: ${(props) => props.theme?.colors?.primary || "#FF3E00"};
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 2px solid
+      ${(props) => props.theme?.colors?.primary || "#FF3E00"};
   }
 
   .name {
     color: #fff;
     font-weight: 900;
-    font-size: 1rem;
-    margin-bottom: 3px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    margin: 0;
   }
 
   .title {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.6rem;
+    font-weight: 800;
     text-transform: uppercase;
-  }
-
-  .rating {
-    color: #ffd700;
-    font-size: 0.8rem;
-    margin-top: 5px;
+    letter-spacing: 1px;
   }
 `;
 
-const RatingBadge = styled.div`
-  display: inline-flex;
+const RatingSummary = styled.div`
+  display: flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(255, 102, 0, 0.1);
-  padding: 8px 20px;
-  border-left: 3px solid ${theme.colors.primary};
-  margin: 0 auto 40px;
-  width: fit-content;
+  gap: 15px;
+  margin-bottom: 40px;
+  color: #fff;
+  font-weight: 900;
+  font-size: 0.8rem;
+  text-transform: uppercase;
 
   .stars {
     color: #ffd700;
-    font-size: 1rem;
-    letter-spacing: 2px;
-  }
-
-  .score {
-    color: #fff;
-    font-weight: 900;
-    font-size: 0.9rem;
-  }
-
-  .total {
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 0.8rem;
   }
 `;
 
@@ -157,56 +139,29 @@ const testimonials = [
   {
     id: 1,
     quote:
-      "The most electrifying event in East Africa! Been attending since 2019 and it gets better every year.",
+      "The most electrifying event in East Africa! It gets better every year.",
     name: "Sarah Mwangi",
     title: "Racing Fan",
-    rating: "★★★★★",
-    initial: "SM",
   },
   {
     id: 2,
-    quote:
-      "Best track conditions I've ever ridden on. The Kenyan crowd is absolutely insane!",
+    quote: "Best track conditions I've ever ridden on. The crowd is insane!",
     name: "David Omondi",
     title: "MX2 Rider",
-    rating: "★★★★★",
-    initial: "DO",
   },
   {
     id: 3,
     quote:
-      "Brought my whole family last year. The kids are still talking about it! Great atmosphere.",
+      "Family atmosphere was amazing. The kids are still talking about it!",
     name: "James Kariuki",
-    title: "Season Ticket Holder",
-    rating: "★★★★★",
-    initial: "JK",
+    title: "Fan",
   },
   {
     id: 4,
     quote:
-      "Production quality rivals international championships. Proud to be a sponsor.",
+      "Production quality rivals international championships. World class.",
     name: "Wanjiku Ngugi",
-    title: "Red Bull Kenya",
-    rating: "★★★★★",
-    initial: "WN",
-  },
-  {
-    id: 5,
-    quote:
-      "This is where Kenya's next motocross stars are born. Can't wait for 2026!",
-    name: "Michael Otieno",
-    title: "Former Champion",
-    rating: "★★★★★",
-    initial: "MO",
-  },
-  {
-    id: 6,
-    quote:
-      "VIP experience was worth every shilling. Already booking for next year!",
-    name: "Lucy Wambui",
-    title: "Corporate Client",
-    rating: "★★★★★",
-    initial: "LW",
+    title: "Red Bull Partner",
   },
 ];
 
@@ -214,38 +169,36 @@ const CTASection = () => {
   return (
     <>
       <CTAWrapper>
-        <StyledContainer>
-          <TitleBox>
+        <Container>
+          <ContentHeader>
             <h2>
-              WHAT <span>FANS SAY</span>
+              THE <span>FEEDBACK</span>
             </h2>
-            <p>TRUSTED BY THOUSANDS</p>
-          </TitleBox>
+            <p>Full Throttle Satisfaction</p>
+          </ContentHeader>
 
-          <RatingBadge>
+          <RatingSummary>
             <span className="stars">★★★★★</span>
-            <span className="score">4.9</span>
-            <span className="total">(500+ reviews)</span>
-          </RatingBadge>
+            <span>4.9 / 5.0 Avg Rating</span>
+          </RatingSummary>
 
-          <TestimonialsWrapper>
+          <div style={{ overflow: "hidden" }}>
             <TestimonialsTrack>
               {[...testimonials, ...testimonials].map((t, i) => (
-                <TestimonialCard key={`${t.id}-${i}`}>
-                  <div className="quote">"{t.quote}"</div>
+                <TestimonialItem key={`${t.id}-${i}`}>
+                  <div className="quote">{t.quote}</div>
                   <div className="client-info">
-                    <div className="avatar">{t.initial}</div>
+                    <div className="avatar-label">MXK</div>
                     <div>
-                      <div className="name">{t.name}</div>
-                      <div className="title">{t.title}</div>
-                      <div className="rating">{t.rating}</div>
+                      <p className="name">{t.name}</p>
+                      <p className="title">{t.title}</p>
                     </div>
                   </div>
-                </TestimonialCard>
+                </TestimonialItem>
               ))}
             </TestimonialsTrack>
-          </TestimonialsWrapper>
-        </StyledContainer>
+          </div>
+        </Container>
       </CTAWrapper>
       <SponsorSection />
     </>
@@ -253,4 +206,3 @@ const CTASection = () => {
 };
 
 export default CTASection;
-
