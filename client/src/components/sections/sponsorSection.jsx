@@ -2,10 +2,9 @@ import React from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.section`
-  padding: 100px 0;
-
+  padding: 80px 0;
   position: relative;
-  border-top: 1px solid rgba(255, 77, 0, 0.15);
+  /* Removed hardcoded background - inherited from parent */
 `;
 
 const Content = styled.div`
@@ -15,7 +14,7 @@ const Content = styled.div`
 `;
 
 const BrandingHeader = styled.div`
-  margin-bottom: 50px;
+  margin-bottom: 40px;
   display: flex;
   align-items: center;
   gap: 25px;
@@ -23,46 +22,52 @@ const BrandingHeader = styled.div`
   .line {
     flex: 1;
     height: 1px;
-    background: linear-gradient(to right, #ff4d00, transparent);
-    opacity: 0.4;
+    background: linear-gradient(
+      to right,
+      ${(props) => props.theme?.colors?.primary || "#FF3E00"},
+      transparent
+    );
+    opacity: 0.3;
   }
 
   h2 {
-    font-size: 0.7rem;
+    font-family: ${(props) => props.theme?.fonts?.display || "sans-serif"};
+    font-size: 0.75rem;
     font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 6px;
+    letter-spacing: 5px;
     color: #fff;
     margin: 0;
 
     span {
-      color: #ff4d00;
+      color: ${(props) => props.theme?.colors?.primary || "#FF3E00"};
     }
   }
 `;
 
 const EliteGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 15px;
 `;
 
 const SponsorCard = styled.div`
-  height: 160px;
-  background: #0a0a0a;
-
-  /* BORDER SHOWING BY DEFAULT - Matches Brand Color */
+  height: 140px;
+  /* Border is themed to the brand color of the sponsor with low opacity by default */
   border: 1px solid
-    ${(props) => props.$brandColor + "66" || "rgba(255, 255, 255, 0.15)"};
-
-  border-radius: 4px;
+    ${(props) =>
+      props.$brandColor
+        ? props.$brandColor + "40"
+        : "rgba(255, 255, 255, 0.1)"};
+  background: rgba(255, 255, 255, 0.02);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   overflow: hidden;
+  clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
 
   &::after {
     content: "";
@@ -70,19 +75,19 @@ const SponsorCard = styled.div`
     inset: 0;
     background: radial-gradient(
       circle at center,
-      ${(props) => props.$brandColor + "20"},
-      transparent 85%
+      ${(props) =>
+        props.$brandColor ? props.$brandColor + "15" : "transparent"},
+      transparent 80%
     );
-    opacity: 0.8;
+    opacity: 0;
     transition: 0.4s;
   }
 
   &:hover {
-    background: #111;
-    /* Border lights up fully */
-    border-color: ${(props) => props.$brandColor || "#ff4d00"};
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+    border-color: ${(props) =>
+      props.$brandColor || props.theme?.colors?.primary || "#FF3E00"};
+    transform: translateY(-5px) scale(1.02);
+    background: rgba(255, 255, 255, 0.05);
     z-index: 2;
 
     &::after {
@@ -90,35 +95,43 @@ const SponsorCard = styled.div`
     }
 
     .logo-img {
-      transform: scale(1.1);
-      filter: brightness(1.15);
+      transform: scale(1.05);
+      /* Brightens slightly on hover for "pop" */
+      filter: brightness(1.1);
+    }
+
+    .status-badge {
+      background: ${(props) => props.$brandColor || "#FF3E00"};
+      color: #000;
+      border-color: transparent;
     }
   }
 `;
 
 const LogoImg = styled.img`
-  width: 75%;
-  height: 65%;
+  width: 65%;
+  height: 55%;
   object-fit: contain;
   position: relative;
   z-index: 2;
   transition: all 0.4s ease;
-  filter: brightness(1);
+  /* Dark overlay removed: grayscale filter and brightness reduction are gone */
+  filter: none;
 `;
 
 const StatusBadge = styled.div`
   position: absolute;
-  top: 12px;
-  right: 15px;
-  font-size: 0.55rem;
+  top: 0;
+  right: 15%;
+  font-size: 0.5rem;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  padding: 4px 10px;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.4);
-  border-radius: 2px;
+  letter-spacing: 1.5px;
+  padding: 4px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.3);
+  transition: 0.3s;
   z-index: 3;
 `;
 
@@ -140,7 +153,7 @@ const SponsorSection = () => {
       name: "Red Bull",
       logo: "https://www.redbull.com/v3/resources/images/client/header/redbullcom-logo_double-with-text.svg",
       tier: "Performance",
-      color: "#001a30",
+      color: "#da0000",
     },
     {
       name: "KCB",
@@ -169,14 +182,15 @@ const SponsorSection = () => {
           ))}
         </EliteGrid>
 
-        <div style={{ marginTop: "80px", textAlign: "center", opacity: 0.3 }}>
+        <div style={{ marginTop: "60px", textAlign: "center", opacity: 0.4 }}>
           <span
             style={{
               fontSize: "0.6rem",
-              letterSpacing: "4px",
+              letterSpacing: "5px",
               textTransform: "uppercase",
               color: "#fff",
               fontWeight: 900,
+              fontStyle: "italic",
             }}
           >
             2026 Season Grid Partnerships // Secure Your Brand Position
