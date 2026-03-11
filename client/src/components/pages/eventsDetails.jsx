@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Container, Row, Col } from "react-bootstrap";
 import { events } from "../dummydata";
 import { theme } from "../../styles/theme";
-import MpesaModal from "../modals/mpesaModal"; // Add this import
+import MpesaModal from "../modals/mpesaModal";
 
 const DetailWrapper = styled.div`
   min-height: 100vh;
@@ -34,15 +34,12 @@ const HeroImage = styled.img`
   max-height: 500px;
   object-fit: cover;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 81, 0, 0.2);
 `;
 
 const PriceSection = styled.div`
-  background: #0a0a0a;
-  padding: 30px;
-  border-radius: 12px;
-  margin: 20px 0;
-  border-left: 4px solid ${theme.colors.primary};
+  padding: 20px 0;
+  margin: 10px 0;
 `;
 
 const Price = styled.div`
@@ -69,7 +66,7 @@ const BuyButton = styled.button`
   clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
   transition: 0.3s;
   width: 100%;
-  margin: 20px 0;
+  margin: 10px 0;
 
   &:hover {
     background: #fff;
@@ -81,17 +78,17 @@ const InfoGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  margin: 30px 0;
+  margin: 20px 0;
   padding: 20px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 81, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 81, 0, 0.2);
 `;
 
 const InfoItem = styled.div`
   text-align: center;
 
   .label {
-    color: #666;
+    color: rgba(255, 255, 255, 0.4);
     font-size: 0.7rem;
     text-transform: uppercase;
     font-weight: 700;
@@ -107,9 +104,25 @@ const InfoItem = styled.div`
 `;
 
 const Description = styled.p`
-  color: #888;
+  color: rgba(255, 255, 255, 0.7);
   line-height: 1.8;
   margin: 20px 0;
+  font-size: 1rem;
+`;
+
+const Title = styled.h1`
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 2rem;
+  margin: 0 0 10px 0;
+  line-height: 1.2;
+`;
+
+const Location = styled.p`
+  color: ${theme.colors.primary};
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin: 0 0 20px 0;
 `;
 
 const EventDetails = () => {
@@ -118,7 +131,7 @@ const EventDetails = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  // Find the event by ID (ensure types match, e.g., String vs Number)
+  // Find the event by ID
   const event = events.find((e) => e.id.toString() === id);
 
   const handleBuyClick = () => {
@@ -127,7 +140,6 @@ const EventDetails = () => {
   };
 
   const handleBack = () => {
-    // Navigate back to home page (root)
     navigate("/");
   };
 
@@ -169,25 +181,10 @@ const EventDetails = () => {
             </Col>
 
             <Col lg={5}>
-              <h1
-                style={{
-                  fontWeight: 900,
-                  textTransform: "uppercase",
-                  fontSize: "2rem",
-                }}
-              >
-                {event.title}
-              </h1>
-
-              <p
-                style={{
-                  color: theme.colors.primary,
-                  fontWeight: "bold",
-                  fontSize: "1.1rem",
-                }}
-              >
+              <Title>{event.title}</Title>
+              <Location>
                 📍 {event.location || "Nairobi International Track"}
-              </p>
+              </Location>
 
               <InfoGrid>
                 <InfoItem>
@@ -219,9 +216,10 @@ const EventDetails = () => {
 
               <p
                 style={{
-                  color: "#666",
+                  color: "rgba(255, 255, 255, 0.3)",
                   fontSize: "0.8rem",
                   textAlign: "center",
+                  marginTop: "15px",
                 }}
               >
                 Secure payment via M-PESA • Instant ticket confirmation
@@ -231,7 +229,6 @@ const EventDetails = () => {
         </Container>
       </DetailWrapper>
 
-      {/* M-PESA Modal */}
       <MpesaModal
         show={showModal}
         onHide={() => setShowModal(false)}
