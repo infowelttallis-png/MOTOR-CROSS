@@ -7,7 +7,6 @@ import { theme } from "../../styles/theme";
 import MpesaModal from "../modals/mpesaModal"; // Add this import
 
 const DetailWrapper = styled.div`
-  background: #000;
   min-height: 100vh;
   padding: 100px 0;
   color: #fff;
@@ -243,4 +242,3 @@ const EventDetails = () => {
 };
 
 export default EventDetails;
-
