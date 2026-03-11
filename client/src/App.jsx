@@ -1,10 +1,15 @@
 // App.js
-import React, { Suspense, lazy } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { Suspense, lazy, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import styled from "styled-components";
 import { GlobalStyle } from "./styles/globalStyles";
 import Header from "./components/layout/header";
-import Footer from "./components/layout/footer";
+import Footer from "./components/layout/Footer";
 import EventDetails from "./components/pages/eventsDetails";
 import NotFound from "./components/layout/notFound";
 
@@ -55,6 +60,22 @@ const LoadingSpinner = styled.div`
   }
 `;
 
+// ScrollToTop component with smooth animation
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // Smooth scroll to top
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  }, [pathname]);
+
+  return null;
+};
+
 // Home page component
 const HomePage = () => (
   <>
@@ -75,6 +96,7 @@ function App() {
   return (
     <Router>
       <GlobalStyle />
+      <ScrollToTop /> {/* This handles the smooth scrolling */}
       <AppContainer>
         <Header />
         <MainContent>
